@@ -39,5 +39,19 @@ void Objcet::DrawObject()
 	m_pRender->DrawSolidRect(position_x, position_y, position_z, fixel_size, red, green, blue, transparent);
 }
 
+void Objcet::SetSpeed(float s)
+{
+	speed = s;
+}
+
+void Objcet::Update()
+{
+
+
+	float update_position_x = position_x + speed * 1;
+	float update_position_y = position_y + speed * 1;
+
+	SetPosition(update_position_x, update_position_y, 0);
+}
 
 

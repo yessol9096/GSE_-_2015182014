@@ -25,12 +25,16 @@ private:
 	float blue;
 	float transparent;
 
+	float speed;
+
 public:
 	//struct float3f GetPosition();
 	
 	void SetSize(float size);
 	void SetPosition(float x, float y, float z);
 	void SetColor(float r, float g, float b, float a);
+	void SetSpeed(float s);
+	void Update();
 
 	virtual void DrawObject();
 	

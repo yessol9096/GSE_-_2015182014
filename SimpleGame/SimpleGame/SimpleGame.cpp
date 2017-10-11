@@ -16,6 +16,7 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
+
 Objcet a, b;
 
 void RenderScene(void)
@@ -23,8 +24,8 @@ void RenderScene(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
-	a.SetColor(0,0,0,0);
-	a.SetPosition(50, 50, 0);
+	a.SetSpeed(0);
+	a.SetColor(1, 1, 1, 0);
 	a.SetSize(50);
 	a.DrawObject();
 
@@ -33,11 +34,16 @@ void RenderScene(void)
 
 void Idle(void)
 {
+	a.Update();
 	RenderScene();
 }
 
 void MouseInput(int button, int state, int x, int y)
 {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		a.SetPosition(x-250, -1*y + 250 , 0); 
+	}
 	RenderScene();
 }
 
@@ -59,6 +65,7 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("Game Software Engineering KPU");
+
 
 	glewInit();
 	if (glewIsSupported("GL_VERSION_3_0"))
