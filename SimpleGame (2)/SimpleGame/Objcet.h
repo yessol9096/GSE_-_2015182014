@@ -1,6 +1,6 @@
 #pragma once
 #include "Renderer.h"
-
+#include <cstdlib>
 class Renderer;
 
 
@@ -29,8 +29,9 @@ public:
 	float life;
 	float life_time;
 
-	float m_vX = 1;
-	float m_vY = 0;
+	float m_vX;
+	float m_vY;
+
 
 public:
 	bool LbuttonDown;
@@ -45,7 +46,8 @@ public:
 	float GetpositionZ();
 	void SetSpeed(float s);
 	void Update(float time);
-	void DrawObject();
+	
+	
 
 };
 

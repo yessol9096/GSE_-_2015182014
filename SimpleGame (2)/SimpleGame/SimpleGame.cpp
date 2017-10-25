@@ -17,21 +17,28 @@ but WITHOUT ANY WARRANTY.
 #include "SceneMgr.h"
 
 //Renderer *g_Renderer = NULL;
-SceneMgr sceneManager;
-float time;
-float m_fStartTime;
+SceneMgr *g_SceneMgr = NULL;
+
+DWORD m_fStartTime = 0;
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-	sceneManager.draw();
+
+	DWORD currTime = timeGetTime();
+	DWORD elapsedTime = currTime - m_fStartTime;
+	m_fStartTime = currTime;
+
+	g_SceneMgr->update(elapsedTime);
+	g_SceneMgr->draw();
+	
 	glutSwapBuffers();
+
 }
 
 void Idle(void)
 {
-	sceneManager.update(time);
 	RenderScene();
 }
 
@@ -69,7 +76,6 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("Game Software Engineering KPU");
-	sceneManager.add(10);
 	glewInit();
 	if (glewIsSupported("GL_VERSION_3_0"))
 	{
@@ -86,16 +92,28 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Renderer could not be initialized.. \n";
 	}*/
-
+	
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
 	glutMouseFunc(MouseInput);
 	glutSpecialFunc(SpecialKeyInput);
+
+	g_SceneMgr = new SceneMgr(500, 500);
+	for (int i = 0; i < 10; i++)
+	{
+		float x = rand() % 400 ;
+		float y = rand() % 400;
+
+		g_SceneMgr->add(x, y);
+	}
+
+	m_fStartTime = timeGetTime();
+	
 	glutMainLoop();
-	float NowTime = (float)timeGetTime();
-	time = NowTime - m_fStartTime;
-	sceneManager.release();
+
+	
+	delete g_SceneMgr;
 	
 	return 0;
 }

@@ -5,4 +5,3 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <windows.h>
-#pragma comment(lib, "winmm.lib");
