@@ -20,7 +20,7 @@ but WITHOUT ANY WARRANTY.
 SceneMgr *g_SceneMgr = NULL;
 
 DWORD m_fStartTime = 0;
-
+bool mouse_click = false;
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -46,12 +46,16 @@ void MouseInput(int button, int state, int x, int y)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		//a.LbuttonDown = true;
+		mouse_click = true;
 
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		//if (a.LbuttonDown == true)a.SetPosition(x - 250, -1 * y + 250, 0);
+		if (mouse_click)
+		{
+			g_SceneMgr->add(x - 250, -1 * y + 250);
+			mouse_click = false;
+		}
 
 	}
 	RenderScene();
@@ -100,7 +104,7 @@ int main(int argc, char **argv)
 	glutSpecialFunc(SpecialKeyInput);
 
 	g_SceneMgr = new SceneMgr(500, 500);
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		float x = rand() % 400 ;
 		float y = rand() % 400;
