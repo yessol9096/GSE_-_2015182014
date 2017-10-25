@@ -16,21 +16,22 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 #include "SceneMgr.h"
 
-Renderer *g_Renderer = NULL;
+//Renderer *g_Renderer = NULL;
 SceneMgr sceneManager;
+float time;
+float m_fStartTime;
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-	sceneManager.add(50);
 	sceneManager.draw();
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
-	sceneManager.update();
+	sceneManager.update(time);
 	RenderScene();
 }
 
@@ -61,14 +62,14 @@ void SpecialKeyInput(int key, int x, int y)
 
 int main(int argc, char **argv)
 {
+	float m_fStartTime = (float)timeGetTime();
 	// Initialize GL things
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("Game Software Engineering KPU");
-
-
+	sceneManager.add(10);
 	glewInit();
 	if (glewIsSupported("GL_VERSION_3_0"))
 	{
@@ -80,21 +81,22 @@ int main(int argc, char **argv)
 	}
 
 	// Initialize Renderer
-	g_Renderer = new Renderer(500, 500);
-	if (!g_Renderer->IsInitialized())
+	//g_Renderer = new Renderer(500, 500);
+	/*if (!g_Renderer->IsInitialized())
 	{
 		std::cout << "Renderer could not be initialized.. \n";
-	}
+	}*/
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
 	glutKeyboardFunc(KeyInput);
 	glutMouseFunc(MouseInput);
 	glutSpecialFunc(SpecialKeyInput);
-
 	glutMainLoop();
-	delete g_Renderer;
+	float NowTime = (float)timeGetTime();
+	time = NowTime - m_fStartTime;
 	sceneManager.release();
+	
 	return 0;
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "SceneMgr.h"
 #include "Objcet.h"
+#include "Renderer.h"
+
 
 #define MAX_OBJECTS_COUNT 100
 
@@ -13,8 +15,10 @@ public:
 	~SceneMgr();
 
 	void add(int num);
+	
+
 	void draw();
-	void update();
+	void update(float time);
 	void release();
 	void collision();
 };

@@ -2,7 +2,6 @@
 #include "Renderer.h"
 #include "Objcet.h"
 
-Renderer *m_pRender;
 
 Objcet::Objcet()
 {
@@ -35,8 +34,7 @@ void Objcet::SetColor(float r, float g, float b, float a)
 
 void Objcet::DrawObject()
 {
-	m_pRender = new Renderer(500, 500);
-	m_pRender->DrawSolidRect(position_x, position_y, position_z, fixel_size, red, green, blue, transparent);
+	
 }
 
 void Objcet::SetSpeed(float s)
@@ -44,14 +42,35 @@ void Objcet::SetSpeed(float s)
 	speed = s;
 }
 
-void Objcet::Update()
+void Objcet::Update(float time)
 {
-	float elapsedTime = 1.5;
+	float elapsedTime = time;
+	position_x = position_x+ m_vX + speed * elapsedTime;
+	position_y = position_y+ m_vY + speed * elapsedTime;
 
-	position_x = position_x + 1 * elapsedTime;
-	position_y = position_y + 1 * elapsedTime;
+	if (position_x > 250)
+		m_vX = -m_vX;
+
+	if (position_x < -250)
+		m_vX = -m_vX;
 
 	SetPosition(position_x, position_y, 0);
+}
+
+float Objcet::GetpositionX()
+{
+	return position_x;
+}
+
+float Objcet::GetpositionY()
+{
+	return position_y;
+}
+
+
+float Objcet::GetpositionZ()
+{
+	return position_z;
 }
 
 
