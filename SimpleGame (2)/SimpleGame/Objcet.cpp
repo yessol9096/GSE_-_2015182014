@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "Objcet.h"
-
+#include "SceneMgr.h"
 
 Objcet::Objcet()
 {
@@ -12,6 +12,7 @@ Objcet::Objcet()
 
 Objcet::~Objcet()
 {
+	
 }
 
 void Objcet::SetSize(float size)
@@ -39,29 +40,64 @@ void Objcet::SetSpeed(float s)
 	speed = s;
 }
 
+
+void  Objcet::SetType(int t)
+{
+	type = t;
+}
+void Objcet::SetLife(int l)
+{
+	life = l;
+}
 void Objcet::Update(float time)
 {
-	float elapsedTime = (int)time % 10;
-
-	position_x = position_x + m_vX * elapsedTime;
-	position_y = position_y + m_vY * elapsedTime;
-
-	if (position_x > 250)
-		m_vX = -1;
-
-	if (position_x < -250)
-		m_vX = 1;
-	
-	if (position_y > 250)
+	if (type != 0 && type != 2)
 	{
-		m_vY = -1;
-	}
+		float elapsedTime = (int)time % 5;
 
-	if (position_y < -250)
-	{
-		m_vY = 1;
+		position_x = position_x + m_vX * elapsedTime;
+		position_y = position_y + m_vY * elapsedTime;
+
+		if (position_x > 250)
+			m_vX = -1;
+
+		if (position_x < -250)
+			m_vX = 1;
+
+		if (position_y > 250)
+		{
+			m_vY = -1;
+		}
+
+		if (position_y < -250)
+		{
+			m_vY = 1;
+		}
+		SetPosition(position_x, position_y, 0);
 	}
-	SetPosition(position_x, position_y, 0);
+	if (type == 2)
+	{
+		int dir = rand() % 2;
+		position_x = position_x + m_vX ;
+		position_y = position_y + m_vY ;
+
+		if (position_x > 250 || dir == 0 )
+			m_vX = -1;
+
+		if (position_x < -250 || dir == 1)
+			m_vX = 1;
+
+		if (position_y > 250 || dir == 0)
+		{
+			m_vY = -1;
+		}
+
+		if (position_y < -250 || dir == 1)
+		{
+			m_vY = 1;
+		}
+		SetPosition(position_x, position_y, 0);
+	}
 }
 
 float Objcet::GetpositionX()

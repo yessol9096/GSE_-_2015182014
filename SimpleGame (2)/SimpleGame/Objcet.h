@@ -4,7 +4,6 @@
 class Renderer;
 
 
-
 class Objcet
 {
 public:
@@ -31,8 +30,7 @@ public:
 
 	float m_vX;
 	float m_vY;
-
-
+	int type;
 public:
 	bool LbuttonDown;
 public:
@@ -40,12 +38,16 @@ public:
 
 	void SetSize(float size);
 	void SetPosition(float x, float y, float z);
+	void SetType(int t);
+	void SetLife(int l);
 	void SetColor(float r, float g, float b, float a);
+
 	float GetpositionX();
 	float GetpositionY();
 	float GetpositionZ();
 	void SetSpeed(float s);
 	void Update(float time);
+	
 	
 	
 

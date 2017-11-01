@@ -6,6 +6,7 @@
 
 Renderer *m_pRender;
 int object_num;
+
 SceneMgr::SceneMgr(int width, int height)
 {
 	// Initialize Renderer
@@ -25,23 +26,60 @@ SceneMgr::~SceneMgr()
 {
 }
 
-void SceneMgr::add(int x, int y)
+void SceneMgr::add(int x, int y, int t)
 {
-	for (int i = 0; i < MAX_OBJECTS_COUNT; i++)
+	for (int i = object_num; i < MAX_OBJECTS_COUNT; i++)
 	{
 		if (m_objects[i] == NULL)
 		{
 			m_objects[i] = new Objcet;
-			m_objects[i]->SetColor(1, 1, 1, 0);
-			m_objects[i]->SetSize(10);
 			m_objects[i]->SetPosition(x, y, 0);
-			m_objects[i]->SetSpeed(1);
+			m_objects[i]->SetType(t);
+
+			if (m_objects[i]->type == 0)
+			{
+				m_objects[i]->SetSize(50);
+				m_objects[i]->SetColor(1, 1, 0, 0);
+				m_objects[i]->SetSpeed(0);
+				m_objects[i]->SetLife(500);
+			}
+			else if (m_objects[i]->type == 1)
+			{
+				m_objects[i]->SetSize(10);
+				m_objects[i]->SetColor(1, 1, 1, 0);
+				m_objects[i]->SetSpeed(100);
+				m_objects[i]->SetLife(10);
+			}
+			else if (m_objects[i]->type == 2)
+			{
+				m_objects[i]->SetSize(2);
+				m_objects[i]->SetColor(1, 0, 0, 0);
+				m_objects[i]->SetSpeed(300);
+				m_objects[i]->SetLife(20);
+			}
+			else if (m_objects[i]->type == 3)
+			{
+				m_objects[i]->SetSize(2);
+				m_objects[i]->SetColor(0, 1, 0, 0);
+				m_objects[i]->SetSpeed(100);
+				m_objects[i]->SetLife(10);
+			}
+
+			break;
 		}
 	}
 	++object_num;
-	
 }
-
+void SceneMgr::bulletmake()
+{
+	for (int i = 0; i < MAX_OBJECTS_COUNT; i++)
+	{
+		if (m_objects[i]->type == OBJECT_BUILDING)
+		{
+			add(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), OBJECT_BULLET);
+		}
+	}
+}
 void SceneMgr::draw()
 {
 	m_renderer->DrawSolidRect(0, 0, 0, m_windowWidth, 0, 0, 0, 0.4);
@@ -54,16 +92,17 @@ void SceneMgr::draw()
 
 void SceneMgr::update(DWORD time)
 {
-	for (int i = 0; i < object_num; ++i)
+	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
+		if (m_objects[i] != NULL)
 		m_objects[i]->Update((float)time);
 	}
 	if(object_num > 2) collision();
+	
 }
 
 void SceneMgr::release()
 {
-
 }
 
 void SceneMgr::collision()
@@ -98,24 +137,16 @@ void SceneMgr::collision()
 					maxY1 = m_objects[j]->GetpositionY() + m_objects[j]->fixel_size / 2.f;
 
 					if (BoxBoxCollisionTest(minX, minY, maxX, maxY, minX1, minY1, maxX1, maxY1))
-					{
-						collisionCount++;
+					{	// 빌딩 캐릭터간 충돌 
+						if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_CHARACTER)
+							{
+								collisionCount = j;
+								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
+								delete m_objects[i];	// 캐릭터삭제 
+								if (m_objects[j]->life < 0) delete m_objects[j];	// 빌딩삭제
+							}
 					}
 				}
-			}
-			if (collisionCount > 0)
-			{
-				m_objects[i]->red = 1;
-				m_objects[i]->green = 0;
-				m_objects[i]->blue = 0;
-				m_objects[i]->transparent = 1;
-			}
-			else
-			{
-				m_objects[i]->red = 1;
-				m_objects[i]->green = 1;
-				m_objects[i]->blue = 1;
-				m_objects[i]->transparent = 1;
 			}
 		}
 	}

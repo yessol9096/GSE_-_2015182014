@@ -21,6 +21,7 @@ SceneMgr *g_SceneMgr = NULL;
 
 DWORD m_fStartTime = 0;
 bool mouse_click = false;
+
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,7 +54,7 @@ void MouseInput(int button, int state, int x, int y)
 	{
 		if (mouse_click)
 		{
-			g_SceneMgr->add(x - 250, -1 * y + 250);
+			g_SceneMgr->add(x - 250, -1 * y + 250, OBJECT_CHARACTER);
 			mouse_click = false;
 		}
 
@@ -104,13 +105,10 @@ int main(int argc, char **argv)
 	glutSpecialFunc(SpecialKeyInput);
 
 	g_SceneMgr = new SceneMgr(500, 500);
-	for (int i = 0; i < 3; i++)
-	{
-		float x = rand() % 400 ;
-		float y = rand() % 400;
 
-		g_SceneMgr->add(x, y);
-	}
+
+	g_SceneMgr->add(0, 0 , OBJECT_BUILDING);
+	
 
 	m_fStartTime = timeGetTime();
 	
