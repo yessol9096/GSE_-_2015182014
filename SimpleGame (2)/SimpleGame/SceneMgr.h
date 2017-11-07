@@ -2,7 +2,7 @@
 #include "Objcet.h"
 #include <iostream>
 
-#define MAX_OBJECTS_COUNT 100
+#define MAX_OBJECTS_COUNT 1000
 
 
 #define	OBJECT_BUILDING 0
@@ -19,14 +19,14 @@ public:
 	~SceneMgr();
 
 	
-	void add(int x, int y, int t);
+	void add(float x, float y, int t);
 	
 
 	void draw();
-	void update(DWORD time);
+	void update(float time);
 	void release();
 	void collision();
-	void bulletmake();
+	void bulletmake(int x, int y);
 	bool BoxBoxCollisionTest(float minX, float minY, float maxX, float maxY, float minX1, float minY1, float maxX1, float maxY1);
 
 	Renderer *m_renderer;

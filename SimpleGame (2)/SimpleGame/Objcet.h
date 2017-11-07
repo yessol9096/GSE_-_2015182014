@@ -1,13 +1,13 @@
 #pragma once
 #include "Renderer.h"
+#include <ctime>
 #include <cstdlib>
 class Renderer;
-
 
 class Objcet
 {
 public:
-	Objcet();
+	Objcet(float x, float y , int type);
 	virtual ~Objcet();
 
 private:
@@ -28,9 +28,10 @@ public:
 	float life;
 	float life_time;
 
-	float m_vX;
-	float m_vY;
+	float m_vX = 1;
+	float m_vY = 1;
 	int type;
+	int dir;
 public:
 	bool LbuttonDown;
 public:

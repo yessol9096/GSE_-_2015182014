@@ -26,79 +26,86 @@ SceneMgr::~SceneMgr()
 {
 }
 
-void SceneMgr::add(int x, int y, int t)
+void SceneMgr::add(float x, float y, int t)
 {
-	for (int i = object_num; i < MAX_OBJECTS_COUNT; i++)
+	for (int i = 0; i < MAX_OBJECTS_COUNT; i++)
 	{
 		if (m_objects[i] == NULL)
 		{
-			m_objects[i] = new Objcet;
-			m_objects[i]->SetPosition(x, y, 0);
-			m_objects[i]->SetType(t);
-
-			if (m_objects[i]->type == 0)
+			m_objects[i] = new Objcet(x,y,t);
+	
+			if (m_objects[i]->type == OBJECT_BUILDING)
 			{
 				m_objects[i]->SetSize(50);
-				m_objects[i]->SetColor(1, 1, 0, 0);
+				m_objects[i]->SetColor(1, 1, 0, 0);  
 				m_objects[i]->SetSpeed(0);
 				m_objects[i]->SetLife(500);
 			}
-			else if (m_objects[i]->type == 1)
+			else if (m_objects[i]->type == OBJECT_CHARACTER)
 			{
 				m_objects[i]->SetSize(10);
 				m_objects[i]->SetColor(1, 1, 1, 0);
 				m_objects[i]->SetSpeed(100);
 				m_objects[i]->SetLife(10);
 			}
-			else if (m_objects[i]->type == 2)
+			else if (m_objects[i]->type == OBJECT_BULLET)
 			{
 				m_objects[i]->SetSize(2);
 				m_objects[i]->SetColor(1, 0, 0, 0);
 				m_objects[i]->SetSpeed(300);
 				m_objects[i]->SetLife(20);
 			}
-			else if (m_objects[i]->type == 3)
+			else if (m_objects[i]->type == OBJECT_ARROW)
 			{
 				m_objects[i]->SetSize(2);
 				m_objects[i]->SetColor(0, 1, 0, 0);
 				m_objects[i]->SetSpeed(100);
 				m_objects[i]->SetLife(10);
 			}
-
 			break;
 		}
 	}
-	++object_num;
 }
-void SceneMgr::bulletmake()
+
+void SceneMgr::bulletmake(int x, int y)
 {
-	for (int i = 0; i < MAX_OBJECTS_COUNT; i++)
-	{
-		if (m_objects[i]->type == OBJECT_BUILDING)
-		{
-			add(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), OBJECT_BULLET);
-		}
-	}
+	//add(x, y, OBJECT_BULLET);
 }
+
 void SceneMgr::draw()
 {
 	m_renderer->DrawSolidRect(0, 0, 0, m_windowWidth, 0, 0, 0, 0.4);
 
-	for (int i = 0; i < object_num; ++i)
+	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
+		if (m_objects[i] != NULL)
 		m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent);
 	}
 }
 
-void SceneMgr::update(DWORD time)
+void SceneMgr::update(float time)
 {
+	int b_time = time;
+	std::cout << b_time << std::endl;
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
+		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && b_time % 5 == 0 )
+		{
+			float x = m_objects[i]->GetpositionX();
+			float y = m_objects[i]->GetpositionY();
+			add(x, y, OBJECT_BULLET);
+		}
+
+
 		if (m_objects[i] != NULL)
-		m_objects[i]->Update((float)time);
+		{
+			m_objects[i]->Update((float)time);
+			//if (m_objects[i]->GetpositionX() > 250) || m_objects[i]->GetpositionX() < -250) //|| m_objects[i]->GetpositionY() > 250 || m_objects[i]->GetpositionY() < -250)
+				//delete m_objects[i];
+		}
+		
 	}
-	if(object_num > 2) collision();
-	
+	collision();
 }
 
 void SceneMgr::release()
@@ -140,11 +147,16 @@ void SceneMgr::collision()
 					{	// 빌딩 캐릭터간 충돌 
 						if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_CHARACTER)
 							{
-								collisionCount = j;
 								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
 								delete m_objects[i];	// 캐릭터삭제 
 								if (m_objects[j]->life < 0) delete m_objects[j];	// 빌딩삭제
 							}
+						else if (m_objects[j]->type == OBJECT_CHARACTER && m_objects[i]->type == OBJECT_BULLET)	// 캐릭터 총알 충돌
+						{
+							m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
+							delete m_objects[i];	// 총알삭제 
+							if (m_objects[j]->life < 0) delete m_objects[j];	// 빌딩삭제
+						}
 					}
 				}
 			}

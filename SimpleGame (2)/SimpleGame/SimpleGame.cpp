@@ -26,12 +26,12 @@ void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-
+	
 	DWORD currTime = timeGetTime();
 	DWORD elapsedTime = currTime - m_fStartTime;
 	m_fStartTime = currTime;
 
-	g_SceneMgr->update(elapsedTime);
+	g_SceneMgr->update((float)elapsedTime);
 	g_SceneMgr->draw();
 	
 	glutSwapBuffers();
@@ -48,7 +48,6 @@ void MouseInput(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
 		mouse_click = true;
-
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
@@ -57,7 +56,6 @@ void MouseInput(int button, int state, int x, int y)
 			g_SceneMgr->add(x - 250, -1 * y + 250, OBJECT_CHARACTER);
 			mouse_click = false;
 		}
-
 	}
 	RenderScene();
 }
