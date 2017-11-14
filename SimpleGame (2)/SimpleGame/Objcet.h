@@ -28,8 +28,8 @@ public:
 	float life;
 	float life_time;
 
-	float m_vX = 1;
-	float m_vY = 1;
+	float m_vX = 0.1;
+	float m_vY = 0.1;
 	int type;
 	int dir;
 public:
@@ -50,7 +50,9 @@ public:
 	void Update(float time);
 	
 	
-	
+	float last_bullet_time = 0.f;
+	float last_arrow_time = 0.f;
 
+	int parent_num;
 };
 

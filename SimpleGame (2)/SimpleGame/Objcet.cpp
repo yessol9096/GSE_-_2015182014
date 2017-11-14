@@ -7,7 +7,7 @@ Objcet::Objcet(float x, float y, int type)
 {
 	SetPosition(x, y, 0);
 	SetType(type);
-	if(type == OBJECT_BULLET)
+	if(type == OBJECT_BULLET || type == OBJECT_ARROW)
 	dir = rand() % 8;
 }
 
@@ -54,67 +54,70 @@ void Objcet::SetLife(int l)
 
 void Objcet::Update(float time)
 {
+	float elapsedTime = time / 1000.f;
+
+	last_bullet_time += elapsedTime;
+	last_arrow_time += elapsedTime;
+
 	if (type == OBJECT_CHARACTER)
 	{
-		float elapsedTime = time / 1000.f;
+		position_x = position_x + m_vX * time;
+		position_y = position_y + m_vY * time;
 		
-		position_x = position_x + m_vX * time ;
-		position_y = position_y + m_vY * time ;
-
 		if (position_x > 250)
-			m_vX = -1;
+			m_vX = -0.1;
 
 		if (position_x < -250)                                                                                                                                                                                                                                                                       
-			m_vX = 1;
+			m_vX = 0.1;
 
 		if (position_y > 250)
-		{
-			m_vY = -1;
-		}
+			m_vY = -0.1;
 
 		if (position_y < -250)
-		{
-			m_vY = 1;
-		}
+			m_vY = 0.1;
+	
 		SetPosition(position_x, position_y, 0);
 	}
-	if (type == OBJECT_BULLET)
+
+	if (type == OBJECT_BULLET || type == OBJECT_ARROW)
 	{
-		float elapsedTime = time / 1000.f;
+		position_x = position_x + m_vX *  elapsedTime;
+		position_y = position_y + m_vY *  elapsedTime;
 
-		position_x = position_x + m_vX ;
-		position_y = position_y + m_vY ;
-
+		if (position_x < -250 || position_x > 250 || position_y < -250 || position_y > 250)
+		{
+			life = -1;
+		}
 		if (dir == 0)// 위
 		{
-			m_vY = -0.5;
+			m_vY = -30.0;
 			m_vX = 0;
 		}
 		else if (dir == 1)	// 아래
 		{
-			m_vY = 0.5;
+			m_vY = 30;
 			m_vX = 0;
 		}
 
 		else if (dir == 2)	// 왼쪽
 		{
-			m_vX = -0.5;
+			m_vX = -30;
 			m_vY = 0;
 		}
 		else if (dir == 3)	// 오른쪽
 		{
-			m_vX = 0.5;
+			m_vX = 30;
 			m_vY = 0;
 		}
 		else if (dir == 4)	// 오른쪽 대각선
 		{
-			m_vY = 0.5;
-			m_vX = 0.5;
+			m_vY = 30;
+			m_vX = 30;
 		}
 		else 
 		{
-			m_vY = -0.5;
-			m_vX = -0.5;
+			m_vY = -30;
+			m_vX = -30;
 		}
 		SetPosition(position_x, position_y, 0);
 	}

@@ -2,13 +2,13 @@
 #include "Objcet.h"
 #include <iostream>
 
-#define MAX_OBJECTS_COUNT 1000
+#define MAX_OBJECTS_COUNT 10000
 
 
-#define	OBJECT_BUILDING 0
+#define	OBJECT_BUILDING	 0
 #define	OBJECT_CHARACTER 1
-#define	OBJECT_BULLET 2
-#define	OBJECT_ARROW 3
+#define	OBJECT_BULLET	 2
+#define	OBJECT_ARROW	 3
 
 
 class SceneMgr
@@ -19,7 +19,7 @@ public:
 	~SceneMgr();
 
 	
-	void add(float x, float y, int t);
+	int add(float x, float y, int t);
 	
 
 	void draw();
@@ -27,6 +27,7 @@ public:
 	void release();
 	void collision();
 	void bulletmake(int x, int y);
+	void lifecheck();
 	bool BoxBoxCollisionTest(float minX, float minY, float maxX, float maxY, float minX1, float minY1, float maxX1, float maxY1);
 
 	Renderer *m_renderer;
