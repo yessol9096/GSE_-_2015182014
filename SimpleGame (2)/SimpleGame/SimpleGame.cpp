@@ -12,7 +12,7 @@ but WITHOUT ANY WARRANTY.
 #include <iostream>
 #include "Dependencies\glew.h"
 #include "Dependencies\freeglut.h"
-#include "Objcet.h"
+#include "Object.h"
 #include "Renderer.h"
 #include "SceneMgr.h"
 
@@ -20,12 +20,13 @@ but WITHOUT ANY WARRANTY.
 SceneMgr *g_SceneMgr = NULL;
 
 DWORD m_fStartTime = 0;
+DWORD mouse_StartTime = 0;
 bool mouse_click = false;
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	
 	DWORD currTime = timeGetTime();
 	DWORD elapsedTime = currTime - m_fStartTime;
@@ -48,13 +49,21 @@ void MouseInput(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
 		mouse_click = true;
+		if (mouse_StartTime == 0.f)
+		{
+			mouse_StartTime = timeGetTime();
+			g_SceneMgr->add(x - 250, 400 - y, OBJECT_CHARACTER, TEAM_2);
+		}
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		if (mouse_click)
+		DWORD m_currTime = timeGetTime();
+		DWORD m_elapsedTime = m_currTime - mouse_StartTime;
+	
+		if (mouse_click && m_elapsedTime > 2000.f)
 		{
-			g_SceneMgr->add(x - 250, -1 * y + 250, OBJECT_CHARACTER);
 			mouse_click = false;
+			mouse_StartTime = 0.f;
 		}
 	}
 	RenderScene();
@@ -77,7 +86,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(500, 800);
 	glutCreateWindow("Game Software Engineering KPU");
 	glewInit();
 	if (glewIsSupported("GL_VERSION_3_0"))
@@ -102,11 +111,16 @@ int main(int argc, char **argv)
 	glutMouseFunc(MouseInput);
 	glutSpecialFunc(SpecialKeyInput);
 
-	g_SceneMgr = new SceneMgr(500, 500);
+	g_SceneMgr = new SceneMgr(500, 800);
 
 
-	g_SceneMgr->add(0, 0 , OBJECT_BUILDING);
-	
+	g_SceneMgr->add(-180, 250 , OBJECT_BUILDING, TEAM_1);
+	g_SceneMgr->add(0, 300, OBJECT_BUILDING, TEAM_1);
+	g_SceneMgr->add(180, 250, OBJECT_BUILDING, TEAM_1);
+
+	g_SceneMgr->add(-180, -250, OBJECT_BUILDING, TEAM_2);
+	g_SceneMgr->add(0, -300, OBJECT_BUILDING, TEAM_2);
+	g_SceneMgr->add(180, -250, OBJECT_BUILDING, TEAM_2);
 
 	m_fStartTime = timeGetTime();
 	

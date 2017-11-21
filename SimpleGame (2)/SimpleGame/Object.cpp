@@ -1,35 +1,77 @@
 #include "stdafx.h"
 #include "Renderer.h"
-#include "Objcet.h"
+#include "Object.h"
 #include "SceneMgr.h"
 
-Objcet::Objcet(float x, float y, int type)
+Object::Object(float x, float y, int type, int Team)
 {
 	SetPosition(x, y, 0);
 	SetType(type);
+	team = Team;
+	if (type == OBJECT_BUILDING)
+	{
+		SetSize(100);
+		SetSpeed(0);
+		SetLife(500);
+
+		m_vX = 0;
+		m_vY = 0;
+		
+		SetColor(1, 1, 0, 1);
+	}
+	else if (type == OBJECT_CHARACTER)
+	{
+		SetSize(10);
+		SetSpeed(100);
+		SetLife(10);
+		if (team == TEAM_1)
+			SetColor(1, 0, 0, 1);
+		else if (team == TEAM_2)
+			SetColor(0, 0, 1, 1);
+	}
+	else if (type == OBJECT_BULLET)
+	{
+		SetSize(2);
+		SetSpeed(300);
+		SetLife(20);
+		if (team == TEAM_1)
+			SetColor(1, 0, 0, 1);
+		else if (team == TEAM_2)
+			SetColor(0, 0, 1, 1);
+	}
+	else if (type == OBJECT_ARROW)
+	{
+		SetSize(2);
+		SetSpeed(100);
+		SetLife(10);
+		if (team == TEAM_1)
+			SetColor(0.5, 0.2, 0.7, 1);
+		else if (team == TEAM_2)
+			SetColor(1, 1, 0, 1);
+	}
 	if(type == OBJECT_BULLET || type == OBJECT_ARROW)
 	dir = rand() % 8;
 }
 
 
-Objcet::~Objcet()
+Object::~Object()
 {
 	
 }
 
-void Objcet::SetSize(float size)
+void Object::SetSize(float size)
 {
 	fixel_size = size;
 }
 
-void Objcet::SetPosition(float x, float y, float z)
+void Object::SetPosition(float x, float y, float z)
 {
 	position_x = x;
 	position_y = y;
 	position_z = z;
 }
 
-void Objcet::SetColor(float r, float g, float b, float a)
+void Object::SetColor(float r, float g, float b, float a)
 {
 	red = r;
 	green = g;
@@ -37,27 +79,28 @@ void Objcet::SetColor(float r, float g, float b, float a)
 	transparent = a;
 }
 
-void Objcet::SetSpeed(float s)
+void Object::SetSpeed(float s)
 {
 	speed = s;
 }
 
-void  Objcet::SetType(int t)
+void  Object::SetType(int t)
 {
 	type = t;
 }
 
-void Objcet::SetLife(int l)
+void Object::SetLife(int l)
 {
 	life = l;
 }
 
-void Objcet::Update(float time)
+void Object::Update(float time)
 {
 	float elapsedTime = time / 1000.f;
 
 	last_bullet_time += elapsedTime;
 	last_arrow_time += elapsedTime;
+	
 
 	if (type == OBJECT_CHARACTER)
 	{
@@ -67,13 +110,13 @@ void Objcet::Update(float time)
 		if (position_x > 250)
 			m_vX = -0.1;
 
-		if (position_x < -250)                                                                                                                                                                                                                                                                       
+		if (position_x < -250)
 			m_vX = 0.1;
 
-		if (position_y > 250)
+		if (position_y > 400)
 			m_vY = -0.1;
 
-		if (position_y < -250)
+		if (position_y < -400)
 			m_vY = 0.1;
 	
 		SetPosition(position_x, position_y, 0);
@@ -84,7 +127,7 @@ void Objcet::Update(float time)
 		position_x = position_x + m_vX *  elapsedTime;
 		position_y = position_y + m_vY *  elapsedTime;
 
-		if (position_x < -250 || position_x > 250 || position_y < -250 || position_y > 250)
+		if (position_x < -250 || position_x > 250 || position_y < -400 || position_y > 400)
 		{
 			life = -1;
 		}
@@ -123,18 +166,18 @@ void Objcet::Update(float time)
 	}
 }
 
-float Objcet::GetpositionX()
+float Object::GetpositionX()
 {
 	return position_x;
 }
 
-float Objcet::GetpositionY()
+float Object::GetpositionY()
 {
 	return position_y;
 }
 
 
-float Objcet::GetpositionZ()
+float Object::GetpositionZ()
 {
 	return position_z;
 }

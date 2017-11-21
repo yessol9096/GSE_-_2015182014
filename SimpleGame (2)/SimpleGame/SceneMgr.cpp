@@ -9,7 +9,6 @@ int object_num;
 
 SceneMgr::SceneMgr(int width, int height)
 {
-	// Initialize Renderer
 	m_renderer = new Renderer(width, height);
 
 	if (!m_renderer->IsInitialized())
@@ -26,73 +25,44 @@ SceneMgr::~SceneMgr()
 {
 }
 
-int SceneMgr::add(float x, float y, int t)
+int SceneMgr::add(float x, float y, int type, int team)
 {
 	for (int i = 0; i < MAX_OBJECTS_COUNT; i++)
 	{
 		if (m_objects[i] == NULL)
 		{
-			m_objects[i] = new Objcet(x, y, t);
-
-			if (m_objects[i]->type == OBJECT_BUILDING)
-			{
-				m_objects[i]->SetSize(50);
-				m_objects[i]->SetColor(1, 1, 0, 1);
-				m_objects[i]->SetSpeed(0);
-				m_objects[i]->SetLife(500);
-
-				m_objects[i]->m_vX = 0;
-				m_objects[i]->m_vY = 0;
-			}
-			else if (m_objects[i]->type == OBJECT_CHARACTER)
-			{
-				m_objects[i]->SetSize(10);
-				m_objects[i]->SetColor(1, 1, 1, 1);
-				m_objects[i]->SetSpeed(100);
-				m_objects[i]->SetLife(10);
-
-			}
-			else if (m_objects[i]->type == OBJECT_BULLET)
-			{
-				m_objects[i]->SetSize(2);
-				m_objects[i]->SetColor(1, 0, 0, 1);
-				m_objects[i]->SetSpeed(300);
-				m_objects[i]->SetLife(20);
-			}
-			else if (m_objects[i]->type == OBJECT_ARROW)
-			{
-				m_objects[i]->SetSize(2);
-				m_objects[i]->SetColor(0, 1, 0, 1);
-				m_objects[i]->SetSpeed(100);
-				m_objects[i]->SetLife(10);
-			}
-
+			m_objects[i] = new Object(x, y, type, team);
 			return i;
 		}
 	}
 	return -1;
 }
 
-void SceneMgr::bulletmake(int x, int y)
-{
-	//add(x, y, OBJECT_BULLET);
-}
 
 void SceneMgr::draw()
 {
-	m_renderer->DrawSolidRect(0, 0, 0, m_windowWidth, 0, 0, 0, 0.4);
-
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		if (m_objects[i] != NULL && m_objects[i]->type != OBJECT_BUILDING)
 		m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent);
-		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING)
-		m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("building.png"));
+		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_1)
+		m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_1CASTLE.png"));
+
+		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_2)
+			m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_2CASTLE.png"));
 	}
 }
+float last_character_time = 0.f;
 
 void SceneMgr::update(float time)
 {
+	if (last_character_time > 1.f)
+	{
+		add((-1)*rand() % 200, rand() % 400, OBJECT_CHARACTER, TEAM_1);
+		last_character_time = 0.f;
+	}
+	else
+		last_character_time += time / 1000.f;
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		if (m_objects[i] != NULL && m_objects[i]->life > 0)
@@ -104,11 +74,12 @@ void SceneMgr::update(float time)
 			delete m_objects[i];
 			m_objects[i] = NULL;
 		}
-		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->last_bullet_time > 0.5f)
+		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->last_bullet_time > 1.f)
 		{
 			float x = m_objects[i]->GetpositionX();
 			float y = m_objects[i]->GetpositionY();
-			int num = add(x, y, OBJECT_BULLET);
+			int team = m_objects[i]->team;
+			int num = add(x, y, OBJECT_BULLET, team);
 			if(num >= 0) m_objects[num]->parent_num = i;
 			m_objects[i]->last_bullet_time = 0.f;
 		}
@@ -116,11 +87,11 @@ void SceneMgr::update(float time)
 		{
 			float x = m_objects[i]->GetpositionX();
 			float y = m_objects[i]->GetpositionY();
-			int num = add(x, y, OBJECT_ARROW);
+			int team = m_objects[i]->team;
+			int num = add(x, y, OBJECT_ARROW, team);
 			if (num >= 0) m_objects[num]->parent_num = i;
 			m_objects[i]->last_arrow_time = 0.f;
 		}
-		
 	}
 	collision();
 
@@ -163,27 +134,30 @@ void SceneMgr::collision()
 
 					if (BoxBoxCollisionTest(minX, minY, maxX, maxY, minX1, minY1, maxX1, maxY1))
 					{	
-						if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_CHARACTER)	// 빌딩 캐릭터간 충돌 
+						if (m_objects[i]->team != m_objects[j]->team)
+						{
+							if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_CHARACTER)	// 빌딩 캐릭터간 충돌 
 							{
 								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
 								m_objects[i]->SetLife(-1);// 캐릭터삭제 
 							}
-						else if (m_objects[j]->type == OBJECT_CHARACTER && m_objects[i]->type == OBJECT_BULLET && m_objects[i]->parent_num != j)	// 캐릭터 총알 충돌
-						{
-							m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
-							m_objects[i]->SetLife(-1);	// 총알삭제 
-						}
+							else if (m_objects[j]->type == OBJECT_CHARACTER && m_objects[i]->type == OBJECT_BULLET && m_objects[i]->parent_num != j)	// 캐릭터 총알 충돌
+							{
+								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
+								m_objects[i]->SetLife(-1);	// 총알삭제 
+							}
 
-						else if (m_objects[j]->type == OBJECT_CHARACTER && m_objects[i]->type == OBJECT_ARROW && m_objects[i]->parent_num != j)	// 캐릭터 화살 충돌
-						{
-							m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
-							m_objects[i]->SetLife(-1);	// 화살삭제 
-						}
+							else if (m_objects[j]->type == OBJECT_CHARACTER && m_objects[i]->type == OBJECT_ARROW && m_objects[i]->parent_num != j)	// 캐릭터 화살 충돌
+							{
+								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
+								m_objects[i]->SetLife(-1);	// 화살삭제 
+							}
 
-						else if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_ARROW)	// 빌딩 화살 충돌
-						{
-							m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
-							m_objects[i]->SetLife(-1);	// 화살삭제 
+							else if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_ARROW)	// 빌딩 화살 충돌
+							{
+								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
+								m_objects[i]->SetLife(-1);	// 화살삭제 
+							}
 						}
 					}
 				}

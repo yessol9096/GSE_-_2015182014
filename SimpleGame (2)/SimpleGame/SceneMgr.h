@@ -1,5 +1,5 @@
 #pragma once
-#include "Objcet.h"
+#include "Object.h"
 #include <iostream>
 
 #define MAX_OBJECTS_COUNT 10000
@@ -10,6 +10,9 @@
 #define	OBJECT_BULLET	 2
 #define	OBJECT_ARROW	 3
 
+#define TEAM_1			 1
+#define TEAM_2			 2
+
 
 class SceneMgr
 {
@@ -19,19 +22,18 @@ public:
 	~SceneMgr();
 
 	
-	int add(float x, float y, int t);
+	int add(float x, float y, int type, int team);
 	
 
 	void draw();
 	void update(float time);
 	void release();
 	void collision();
-	void bulletmake(int x, int y);
-	void lifecheck();
+
 	bool BoxBoxCollisionTest(float minX, float minY, float maxX, float maxY, float minX1, float minY1, float maxX1, float maxY1);
 
 	Renderer *m_renderer;
-	Objcet* m_objects[MAX_OBJECTS_COUNT];
+	Object* m_objects[MAX_OBJECTS_COUNT];
 	int m_windowWidth;
 	int m_windowHeight;
 };

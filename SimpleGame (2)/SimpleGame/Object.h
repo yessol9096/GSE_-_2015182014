@@ -4,11 +4,11 @@
 #include <cstdlib>
 class Renderer;
 
-class Objcet
+class Object
 {
 public:
-	Objcet(float x, float y , int type);
-	virtual ~Objcet();
+	Object(float x, float y , int type, int team);
+	virtual ~Object();
 
 private:
 	// 오브젝트 위치
@@ -31,12 +31,11 @@ public:
 	float m_vX = 0.1;
 	float m_vY = 0.1;
 	int type;
+	int team;
 	int dir;
 public:
 	bool LbuttonDown;
 public:
-	//struct float3f GetPosition();
-
 	void SetSize(float size);
 	void SetPosition(float x, float y, float z);
 	void SetType(int t);
@@ -52,7 +51,7 @@ public:
 	
 	float last_bullet_time = 0.f;
 	float last_arrow_time = 0.f;
-
+	
 	int parent_num;
 };
 
