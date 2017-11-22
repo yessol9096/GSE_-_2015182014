@@ -44,12 +44,26 @@ void SceneMgr::draw()
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		if (m_objects[i] != NULL && m_objects[i]->type != OBJECT_BUILDING)
-		m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent);
+		{
+			m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
+			if (m_objects[i]->type == OBJECT_CHARACTER)
+			{
+				if(m_objects[i]->team == TEAM_1)
+					m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 1, 0, 0, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
+				if (m_objects[i]->team == TEAM_2)
+					m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 0, 0, 1, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
+			}
+		}
 		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_1)
-		m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_1CASTLE.png"));
-
+		{
+			m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 1, 0, 0, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
+			m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_1CASTLE.png"), m_objects[i]->GetLevel());
+		}
 		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_2)
-			m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_2CASTLE.png"));
+		{
+			m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 0, 0, 1, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
+			m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_2CASTLE.png"), m_objects[i]->GetLevel());
+		}
 	}
 }
 float last_character_time = 0.f;

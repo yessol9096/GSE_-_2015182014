@@ -13,17 +13,20 @@ Object::Object(float x, float y, int type, int Team)
 		SetSize(100);
 		SetSpeed(0);
 		SetLife(500);
-
+		SetLevel(LEVEL_GOD);
+		
 		m_vX = 0;
 		m_vY = 0;
 		
-		SetColor(1, 1, 0, 1);
+		SetColor(1, 1, 1, 1);
 	}
 	else if (type == OBJECT_CHARACTER)
 	{
-		SetSize(10);
-		SetSpeed(100);
-		SetLife(10);
+		SetSize(30);
+		SetSpeed(300);
+		SetLife(100);
+		SetLevel(LEVEL_SKY);
+		
 		if (team == TEAM_1)
 			SetColor(1, 0, 0, 1);
 		else if (team == TEAM_2)
@@ -31,9 +34,11 @@ Object::Object(float x, float y, int type, int Team)
 	}
 	else if (type == OBJECT_BULLET)
 	{
-		SetSize(2);
-		SetSpeed(300);
-		SetLife(20);
+		SetSize(4);
+		SetSpeed(600);
+		SetLife(15);
+		SetLevel(LEVEL_GROUND);
+
 		if (team == TEAM_1)
 			SetColor(1, 0, 0, 1);
 		else if (team == TEAM_2)
@@ -41,9 +46,11 @@ Object::Object(float x, float y, int type, int Team)
 	}
 	else if (type == OBJECT_ARROW)
 	{
-		SetSize(2);
+		SetSize(4);
 		SetSpeed(100);
 		SetLife(10);
+		SetLevel(LEVEL_UNDERGROUND);
+
 		if (team == TEAM_1)
 			SetColor(0.5, 0.2, 0.7, 1);
 		else if (team == TEAM_2)
@@ -166,6 +173,11 @@ void Object::Update(float time)
 	}
 }
 
+void Object::SetLevel(float level)
+{
+	draw_level = level;
+};
+
 float Object::GetpositionX()
 {
 	return position_x;
@@ -180,6 +192,11 @@ float Object::GetpositionY()
 float Object::GetpositionZ()
 {
 	return position_z;
+}
+
+float Object::GetLevel()
+{
+	return draw_level;
 }
 
 

@@ -16,7 +16,7 @@ private:
 	float position_y;
 	float position_z;
 	// 오브젝트 크기
-	
+	float draw_level;
 
 public:
 	float fixel_size;
@@ -27,6 +27,7 @@ public:
 	float speed;
 	float life;
 	float life_time;
+	
 
 	float m_vX = 0.1;
 	float m_vY = 0.1;
@@ -41,10 +42,12 @@ public:
 	void SetType(int t);
 	void SetLife(int l);
 	void SetColor(float r, float g, float b, float a);
+	void SetLevel(float level);
 
 	float GetpositionX();
 	float GetpositionY();
 	float GetpositionZ();
+	float GetLevel();
 	void SetSpeed(float s);
 	void Update(float time);
 	
