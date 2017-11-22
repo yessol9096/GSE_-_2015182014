@@ -56,7 +56,7 @@ float last_character_time = 0.f;
 
 void SceneMgr::update(float time)
 {
-	if (last_character_time > 1.f)
+	if (last_character_time > 5.f)
 	{
 		add((-1)*rand() % 200, rand() % 400, OBJECT_CHARACTER, TEAM_1);
 		last_character_time = 0.f;
@@ -74,7 +74,7 @@ void SceneMgr::update(float time)
 			delete m_objects[i];
 			m_objects[i] = NULL;
 		}
-		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->last_bullet_time > 1.f)
+		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->last_bullet_time > 5.f)
 		{
 			float x = m_objects[i]->GetpositionX();
 			float y = m_objects[i]->GetpositionY();
@@ -83,7 +83,7 @@ void SceneMgr::update(float time)
 			if(num >= 0) m_objects[num]->parent_num = i;
 			m_objects[i]->last_bullet_time = 0.f;
 		}
-		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_CHARACTER && m_objects[i]->last_arrow_time > 0.5f)
+		if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_CHARACTER && m_objects[i]->last_arrow_time > 3.f)
 		{
 			float x = m_objects[i]->GetpositionX();
 			float y = m_objects[i]->GetpositionY();

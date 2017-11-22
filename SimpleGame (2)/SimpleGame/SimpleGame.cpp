@@ -60,7 +60,7 @@ void MouseInput(int button, int state, int x, int y)
 		DWORD m_currTime = timeGetTime();
 		DWORD m_elapsedTime = m_currTime - mouse_StartTime;
 	
-		if (mouse_click && m_elapsedTime > 2000.f)
+		if (mouse_click && m_elapsedTime > 7000.f)
 		{
 			mouse_click = false;
 			mouse_StartTime = 0.f;
