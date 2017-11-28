@@ -155,6 +155,11 @@ void SceneMgr::collision()
 								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
 								m_objects[i]->SetLife(-1);// Ä³¸¯ÅÍ»èÁ¦ 
 							}
+							else if (m_objects[j]->type == OBJECT_BUILDING && m_objects[i]->type == OBJECT_BULLET)	// ºôµù ÃÑ¾Ë Ãæµ¹ 
+							{
+								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
+								m_objects[i]->SetLife(-1);// ÃÑ¾Ë»èÁ¦ 
+							}
 							else if (m_objects[j]->type == OBJECT_CHARACTER && m_objects[i]->type == OBJECT_BULLET && m_objects[i]->parent_num != j)	// Ä³¸¯ÅÍ ÃÑ¾Ë Ãæµ¹
 							{
 								m_objects[j]->SetLife(m_objects[j]->life - m_objects[i]->life);
