@@ -6,6 +6,8 @@
 
 Renderer *m_pRender;
 int object_num;
+int ani_index;
+float p_Time = 0.f;
 
 SceneMgr::SceneMgr(int width, int height)
 {
@@ -41,28 +43,50 @@ int SceneMgr::add(float x, float y, int type, int team)
 
 void SceneMgr::draw()
 {
+	ani_index++;
+	if (ani_index == 12) ani_index = 0;
+	p_Time += 0.05f;
+	m_renderer->DrawTexturedRect(0, 0, 0, 800, 1, 1, 1, 1, m_renderer->CreatePngTexture("background.png"), LEVEL_BACKGROUND);
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
-		if (m_objects[i] != NULL && m_objects[i]->type != OBJECT_BUILDING)
+		if (m_objects[i] != NULL)
 		{
-			m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
-			if (m_objects[i]->type == OBJECT_CHARACTER)
+			if ( m_objects[i]->type == OBJECT_CHARACTER)
 			{
-				if(m_objects[i]->team == TEAM_1)
-					m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 1, 0, 0, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
-				if (m_objects[i]->team == TEAM_2)
-					m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 0, 0, 1, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
+				m_renderer->DrawTexturedRectSeq(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 64, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("Character.png"), ani_index, 0, 12, 1, m_objects[i]->GetLevel());
+				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY()-10, m_objects[i]->GetpositionZ(), 5, 1, 1, 1, 1, 0, -1, m_renderer->CreatePngTexture("snow.png"), p_Time);
+				{
+					if (m_objects[i]->team == TEAM_1)
+						m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 1, 0, 0, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
+					if (m_objects[i]->team == TEAM_2)
+						m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 0, 0, 1, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
+				}
 			}
-		}
-		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_1)
-		{
-			m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 1, 0, 0, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
-			m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_1CASTLE.png"), m_objects[i]->GetLevel());
-		}
-		else if (m_objects[i] != NULL && m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_2)
-		{
-			m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 0, 0, 1, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
-			m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_2CASTLE.png"), m_objects[i]->GetLevel());
+			else if (m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_1)
+			{
+				m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 1, 0, 0, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
+				//m_renderer->DrawTexturedRectSeq(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("Character.png"), 0, 0, 12, 1, m_objects[i]->GetLevel());
+				m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_1CASTLE.png"), m_objects[i]->GetLevel());
+			}
+			else if (m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_2)
+			{
+				m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 0, 0, 1, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
+				m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_2CASTLE.png"), m_objects[i]->GetLevel());
+			}
+			else if (m_objects[i]->type == OBJECT_BULLET && m_objects[i]->team == TEAM_1)
+			{
+				m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
+				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 4, 1, 1, 1, 1, 0, 1, m_renderer->CreatePngTexture("particle_Team1.png"), p_Time);
+			}
+			else if (m_objects[i]->type == OBJECT_BULLET && m_objects[i]->team == TEAM_2)
+			{
+				m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
+				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 3, 1, 1, 1, 1, 0, -1, m_renderer->CreatePngTexture("particle_Team2.png"), p_Time);
+			}
+			else 
+			{
+				m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
+			}
 		}
 	}
 }

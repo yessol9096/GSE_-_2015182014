@@ -185,7 +185,13 @@
     <None Include="Shaders\SolidRectWithTextureSeq.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\CAPTURE.PNG" />
+    <Image Include="background.png" />
     <Image Include="building.png" />
+    <Image Include="Character.png" />
+    <Image Include="particle_Team1.png" />
+    <Image Include="particle_Team2.png" />
+    <Image Include="snow.png" />
     <Image Include="TEAM_1CASTLE.png" />
     <Image Include="TEAM_2CASTLE.png" />
   </ItemGroup>

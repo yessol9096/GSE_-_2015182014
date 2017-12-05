@@ -96,6 +96,24 @@
     <Image Include="TEAM_2CASTLE.png">
       <Filter>소스 파일\Resource</Filter>
     </Image>
+    <Image Include="..\..\CAPTURE.PNG">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
+    <Image Include="Character.png">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
+    <Image Include="particle_Team1.png">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
+    <Image Include="particle_Team2.png">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
+    <Image Include="background.png">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
+    <Image Include="snow.png">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SimpleGame.rc">

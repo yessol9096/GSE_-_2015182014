@@ -17,6 +17,7 @@
 #define LEVEL_SKY		 0.1	
 #define LEVEL_GROUND     0.2
 #define LEVEL_UNDERGROUND 0.3	
+#define LEVEL_BACKGROUND 0.4
 class SceneMgr
 {
 	int m_num;

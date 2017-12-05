@@ -27,10 +27,8 @@ Object::Object(float x, float y, int type, int Team)
 		SetLife(100);
 		SetLevel(LEVEL_SKY);
 		
-		if (team == TEAM_1)
-			SetColor(1, 0, 0, 1);
-		else if (team == TEAM_2)
-			SetColor(0, 0, 1, 1);
+		SetColor(1, 1, 1, 1);
+		
 	}
 	else if (type == OBJECT_BULLET)
 	{
@@ -40,9 +38,15 @@ Object::Object(float x, float y, int type, int Team)
 		SetLevel(LEVEL_GROUND);
 
 		if (team == TEAM_1)
+		{
 			SetColor(1, 0, 0, 1);
+			dir = rand()% 5;
+		}
 		else if (team == TEAM_2)
+		{
 			SetColor(0, 0, 1, 1);
+			dir = rand() % 5;
+		}
 	}
 	else if (type == OBJECT_ARROW)
 	{
@@ -56,7 +60,7 @@ Object::Object(float x, float y, int type, int Team)
 		else if (team == TEAM_2)
 			SetColor(1, 1, 0, 1);
 	}
-	if(type == OBJECT_BULLET || type == OBJECT_ARROW)
+	if( type == OBJECT_ARROW)
 	dir = rand() % 8;
 }
 
