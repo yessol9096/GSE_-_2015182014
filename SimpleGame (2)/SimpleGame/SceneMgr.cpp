@@ -1,13 +1,23 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
 #include "Renderer.h"
-
-
+#include "Sound.h"
+#include <stdlib.h>
 
 Renderer *m_pRender;
 int object_num;
 int ani_index;
 float p_Time = 0.f;
+
+Sound *m_sound;
+
+float background_ID;
+float character_ID ;
+float snow_ID ;
+float castle1_ID;
+float castle2_ID ;
+float particle1_ID;
+float particle2_ID;
 
 SceneMgr::SceneMgr(int width, int height)
 {
@@ -17,6 +27,20 @@ SceneMgr::SceneMgr(int width, int height)
 	{
 		std::cout << "SceneMgr::Renderer could not be initialized.. \n";
 	}
+
+	m_sound = new Sound();
+	float soundBG = m_sound->CreateSound("bgm.mp3");
+
+	background_ID = m_renderer->CreatePngTexture("background.png");
+	character_ID = m_renderer->CreatePngTexture("Character.png");
+	snow_ID = m_renderer->CreatePngTexture("snow.png");
+	castle1_ID = m_renderer->CreatePngTexture("TEAM_1CASTLE.png");
+	castle2_ID = m_renderer->CreatePngTexture("TEAM_2CASTLE.png");
+	particle1_ID = m_renderer->CreatePngTexture("particle_Team1.png");
+	particle2_ID = m_renderer->CreatePngTexture("particle_Team2.png");
+
+	m_sound->PlaySound(soundBG, true, 0.7f);
+
 
 	m_windowWidth = width;
 	m_windowHeight = height;
@@ -40,21 +64,24 @@ int SceneMgr::add(float x, float y, int type, int team)
 	return -1;
 }
 
-
 void SceneMgr::draw()
 {
+
+	char array[10];
+
 	ani_index++;
 	if (ani_index == 12) ani_index = 0;
-	p_Time += 0.05f;
-	m_renderer->DrawTexturedRect(0, 0, 0, 800, 1, 1, 1, 1, m_renderer->CreatePngTexture("background.png"), LEVEL_BACKGROUND);
+	p_Time += 0.005f;
+
+	m_renderer->DrawTexturedRect(0, 0, 0, 800, 1, 1, 1, 1, background_ID, LEVEL_BACKGROUND);
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		if (m_objects[i] != NULL)
 		{
 			if ( m_objects[i]->type == OBJECT_CHARACTER)
 			{
-				m_renderer->DrawTexturedRectSeq(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 64, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("Character.png"), ani_index, 0, 12, 1, m_objects[i]->GetLevel());
-				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY()-10, m_objects[i]->GetpositionZ(), 5, 1, 1, 1, 1, 0, -1, m_renderer->CreatePngTexture("snow.png"), p_Time);
+				m_renderer->DrawTexturedRectSeq(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 64, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, character_ID, ani_index, 0, 12, 1, m_objects[i]->GetLevel());
+				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY()-10, m_objects[i]->GetpositionZ(), 5, 1, 1, 1, 1, 0, -1, snow_ID , p_Time);
 				{
 					if (m_objects[i]->team == TEAM_1)
 						m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 25, m_objects[i]->GetpositionZ(), 40, 5, 1, 0, 0, 1, (m_objects[i]->life) / 100.f, m_objects[i]->GetLevel());
@@ -65,23 +92,26 @@ void SceneMgr::draw()
 			else if (m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_1)
 			{
 				m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 1, 0, 0, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
-				//m_renderer->DrawTexturedRectSeq(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("Character.png"), 0, 0, 12, 1, m_objects[i]->GetLevel());
-				m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_1CASTLE.png"), m_objects[i]->GetLevel());
+				m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, castle1_ID, m_objects[i]->GetLevel());
+				snprintf(array, 10, "%d", (int)m_objects[i]->life);
+				m_renderer->DrawTextW(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 20, GLUT_BITMAP_HELVETICA_12, 0, 0, 0, array);
 			}
 			else if (m_objects[i]->type == OBJECT_BUILDING && m_objects[i]->team == TEAM_2)
 			{
 				m_renderer->DrawSolidRectGauge(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 70, m_objects[i]->GetpositionZ(), 100, 10, 0, 0, 1, 1, (m_objects[i]->life) / 500.f, m_objects[i]->GetLevel());
-				m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_renderer->CreatePngTexture("TEAM_2CASTLE.png"), m_objects[i]->GetLevel());
+				m_renderer->DrawTexturedRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, castle2_ID, m_objects[i]->GetLevel());
+				snprintf(array, 10, "%d", (int)m_objects[i]->life);
+				m_renderer->DrawTextW(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY() - 20, GLUT_BITMAP_HELVETICA_12, 0, 0, 0, array);
 			}
 			else if (m_objects[i]->type == OBJECT_BULLET && m_objects[i]->team == TEAM_1)
 			{
 				m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
-				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 4, 1, 1, 1, 1, 0, 1, m_renderer->CreatePngTexture("particle_Team1.png"), p_Time);
+				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 6, 1, 1, 1, 1, -(m_objects[i]->m_vX), -(m_objects[i]->m_vY), particle1_ID, p_Time);
 			}
 			else if (m_objects[i]->type == OBJECT_BULLET && m_objects[i]->team == TEAM_2)
 			{
 				m_renderer->DrawSolidRect(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), m_objects[i]->fixel_size, m_objects[i]->red, m_objects[i]->green, m_objects[i]->blue, m_objects[i]->transparent, m_objects[i]->GetLevel());
-				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 3, 1, 1, 1, 1, 0, -1, m_renderer->CreatePngTexture("particle_Team2.png"), p_Time);
+				m_renderer->DrawParticle(m_objects[i]->GetpositionX(), m_objects[i]->GetpositionY(), m_objects[i]->GetpositionZ(), 4, 1, 1, 1, 1, -(m_objects[i]->m_vX), -(m_objects[i]->m_vY), particle2_ID, p_Time);
 			}
 			else 
 			{
@@ -141,6 +171,7 @@ void SceneMgr::release()
 
 void SceneMgr::collision()
 {
+	
 	int collisionCount = 0;
 
 	for (int i = 0; i < MAX_OBJECTS_COUNT; i++)

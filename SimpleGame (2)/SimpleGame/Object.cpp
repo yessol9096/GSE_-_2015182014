@@ -41,11 +41,13 @@ Object::Object(float x, float y, int type, int Team)
 		{
 			SetColor(1, 0, 0, 1);
 			dir = rand()% 5;
+			if (dir == 1) dir = 0;
 		}
 		else if (team == TEAM_2)
 		{
 			SetColor(0, 0, 1, 1);
 			dir = rand() % 5;
+			if (dir == 0) dir = 1;
 		}
 	}
 	else if (type == OBJECT_ARROW)

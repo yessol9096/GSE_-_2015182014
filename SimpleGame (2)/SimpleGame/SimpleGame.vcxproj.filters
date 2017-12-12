@@ -45,6 +45,9 @@
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +66,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,5 +125,13 @@
     <ResourceCompile Include="SimpleGame.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Dependencies\SoundSamples\explosion.wav">
+      <Filter>소스 파일\Resource</Filter>
+    </Media>
+    <Media Include="bgm.mp3">
+      <Filter>소스 파일\Resource</Filter>
+    </Media>
   </ItemGroup>
 </Project>

@@ -28,6 +28,7 @@ public:
 	float life;
 	float life_time;
 	
+	
 
 	float m_vX = 0.1;
 	float m_vY = 0.1;

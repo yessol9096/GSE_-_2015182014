@@ -15,9 +15,11 @@ but WITHOUT ANY WARRANTY.
 #include "Object.h"
 #include "Renderer.h"
 #include "SceneMgr.h"
+#include "Sound.h"
 
 //Renderer *g_Renderer = NULL;
 SceneMgr *g_SceneMgr = NULL;
+
 
 DWORD m_fStartTime = 0;
 DWORD mouse_StartTime = 0;
