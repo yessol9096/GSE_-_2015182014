@@ -28,8 +28,8 @@ public:
 	float life;
 	float life_time;
 	
-	
-
+	float p_time;
+	bool p_time_plus = true;
 	float m_vX = 0.1;
 	float m_vY = 0.1;
 	int type;

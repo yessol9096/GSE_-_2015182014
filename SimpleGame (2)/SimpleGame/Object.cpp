@@ -137,8 +137,8 @@ void Object::Update(float time)
 
 	if (type == OBJECT_BULLET || type == OBJECT_ARROW)
 	{
-		position_x = position_x + m_vX *  elapsedTime;
-		position_y = position_y + m_vY *  elapsedTime;
+		position_x = position_x + m_vX *  elapsedTime * speed/100;
+		position_y = position_y + m_vY *  elapsedTime * speed / 100;
 
 		if (position_x < -250 || position_x > 250 || position_y < -400 || position_y > 400)
 		{
