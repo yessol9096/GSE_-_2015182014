@@ -138,6 +138,9 @@
     <Image Include="snow.png">
       <Filter>소스 파일\Resource</Filter>
     </Image>
+    <Image Include="MELEE.png">
+      <Filter>소스 파일\Resource</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SimpleGame.rc">
@@ -149,6 +152,12 @@
       <Filter>소스 파일\Resource</Filter>
     </Media>
     <Media Include="bgm.mp3">
+      <Filter>소스 파일\Resource</Filter>
+    </Media>
+    <Media Include="PUNCH.wav">
+      <Filter>소스 파일\Resource</Filter>
+    </Media>
+    <Media Include="died.wav">
       <Filter>소스 파일\Resource</Filter>
     </Media>
   </ItemGroup>

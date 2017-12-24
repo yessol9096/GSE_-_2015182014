@@ -197,6 +197,7 @@
     <Image Include="background.png" />
     <Image Include="building.png" />
     <Image Include="Character.png" />
+    <Image Include="MELEE.png" />
     <Image Include="particle_Team1.png" />
     <Image Include="particle_Team2.png" />
     <Image Include="snow.png" />
@@ -209,6 +210,8 @@
   <ItemGroup>
     <Media Include="bgm.mp3" />
     <Media Include="Dependencies\SoundSamples\explosion.wav" />
+    <Media Include="died.wav" />
+    <Media Include="PUNCH.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,6 +25,10 @@ DWORD m_fStartTime = 0;
 DWORD mouse_StartTime = 0;
 bool mouse_click = false;
 
+
+DWORD A_fStartTime = 0;
+DWORD mouseA_StartTime = 0;
+bool mouseA_click = false;
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,6 +70,27 @@ void MouseInput(int button, int state, int x, int y)
 		{
 			mouse_click = false;
 			mouse_StartTime = 0.f;
+		}
+	}
+	/// 근접공격 유닛 부르기
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+	{
+		mouse_click = true;
+		if (mouseA_StartTime == 0.f)
+		{
+			mouseA_StartTime = timeGetTime();
+			g_SceneMgr->add(x - 250, 400 - y, OBJECT_MELEEATTACK, TEAM_2);
+		}
+	}
+	if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
+	{
+		DWORD m_currTime = timeGetTime();
+		DWORD m_elapsedTime = m_currTime - mouseA_StartTime;
+
+		if (mouse_click && m_elapsedTime > 3000.f)
+		{
+			mouseA_click = false;
+			mouseA_StartTime = 0.f;
 		}
 	}
 	RenderScene();

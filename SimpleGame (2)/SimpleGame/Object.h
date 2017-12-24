@@ -4,6 +4,7 @@
 #include <cstdlib>
 class Renderer;
 
+
 class Object
 {
 public:
@@ -32,6 +33,7 @@ public:
 	bool p_time_plus = true;
 	float m_vX = 0.1;
 	float m_vY = 0.1;
+	int melee;
 	int type;
 	int team;
 	int dir;

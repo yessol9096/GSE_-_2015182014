@@ -3,8 +3,23 @@
 #include "Object.h"
 #include "SceneMgr.h"
 
+int melee_1 = 0;
+
+float b1_x[3];
+float b2_x[3];
+float b1_y[3];
+float b2_y[3];
+
 Object::Object(float x, float y, int type, int Team)
 {
+	b1_x[0] = -180; b1_y[0] = 250;
+	b1_x[1] = 0; b1_y[1] = 300;
+	b1_x[2] = 180; b1_y[2] = 250;
+
+	b2_x[0] = -180; b2_y[0] = -250;
+	b2_x[1] = 0; b2_y[1] = -300;
+	b2_x[2] = 180; b2_y[2] = -250;
+
 	SetPosition(x, y, 0);
 	SetType(type);
 	team = Team;
@@ -62,6 +77,17 @@ Object::Object(float x, float y, int type, int Team)
 		else if (team == TEAM_2)
 			SetColor(1, 1, 0, 1);
 	}
+	else if (type == OBJECT_MELEEATTACK)
+	{
+		SetSize(30);
+		SetSpeed(300);
+		SetLife(100);
+		SetLevel(LEVEL_SKY);
+		SetColor(1, 0, 0, 1);
+		++melee_1;
+		melee = melee_1;
+
+	}
 	if( type == OBJECT_ARROW)
 	dir = rand() % 8;
 }
@@ -109,6 +135,9 @@ void Object::SetLife(int l)
 
 void Object::Update(float time)
 {
+	float b_x;
+	float b_y;
+
 	float elapsedTime = time / 1000.f;
 
 	last_bullet_time += elapsedTime;
@@ -177,6 +206,34 @@ void Object::Update(float time)
 		}
 		SetPosition(position_x, position_y, 0);
 	}
+
+	if (type == OBJECT_MELEEATTACK)
+	{
+		position_x = position_x + m_vX *  elapsedTime * speed / 100;
+		position_y = position_y + m_vY *  elapsedTime * speed / 100;
+		std::cout << b1_x[3] << std::endl;
+		if (team == TEAM_2) { b_x = b1_x[melee%3], b_y = b1_y[melee%3]; }
+		else if (team == TEAM_1) { b_x = b2_x[melee%3], b_y = b2_y[melee%3]; }
+
+		if (position_x < -250 || position_x > 250 || position_y < -400 || position_y > 400)
+		{
+			life = -10;
+		}
+		if (position_x > b_x)
+			m_vX = -10;
+
+		if (position_x < b_x)
+			m_vX = 10;
+
+		if (position_y > b_y)
+			m_vY = -10;
+
+		if (position_y < b_y)
+			m_vY = 10;
+
+		SetPosition(position_x, position_y, 0);
+	}
+	
 }
 
 void Object::SetLevel(float level)
